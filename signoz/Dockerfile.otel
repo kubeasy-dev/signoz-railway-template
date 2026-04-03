@@ -1,8 +1,7 @@
 FROM signoz/signoz-otel-collector:v0.144.2
 
 COPY ./otel-collector-config.yaml /etc/otel-collector-config.yaml
-# Override OpAMP endpoint to unreachable address so SigNoz never pushes
-# its config (which lacks the logs pipeline) over the static config.
-COPY signoz/otel-collector-opamp-config.yaml /etc/manager-config.yaml
 
+# No manager-config copied — if the base image has no default /etc/manager-config.yaml,
+# the binary should start in pure static-config mode (no OpAMP override).
 CMD ["--config=/etc/otel-collector-config.yaml", "--copy-path=/tmp/collector-opamp-override.yaml"]
